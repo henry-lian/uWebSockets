@@ -190,7 +190,7 @@ public:
         listenSocket->start(loop, listenSocket, UV_READABLE);
 
         // should be vector of listen data! one group can have many listeners!
-        nodeData->user = listenSocket;
+        nodeData->users.push_back(listenSocket);
 
         freeaddrinfo(result);
         return false;

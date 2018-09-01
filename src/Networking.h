@@ -202,7 +202,7 @@ struct WIN32_EXPORT NodeData {
     int recvLength;
     Loop *loop;
     uS::Context *netContext;
-    void *user = nullptr;
+	std::vector<void*> users;
     static const int preAllocMaxSize = 1024;
     char **preAlloc;
     SSL_CTX *clientContext;

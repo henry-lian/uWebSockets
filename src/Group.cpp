@@ -137,20 +137,24 @@ Group<isServer>::Group(int extensionOptions, unsigned int maxPayload, Hub *hub, 
 template <bool isServer>
 void Group<isServer>::stopListening() {
     if (isServer) {
-        if (user) {
-            // todo: we should allow one group to listen to many ports!
-            uS::ListenSocket *listenSocket = (uS::ListenSocket *) user;
+		for (auto& user : users) {
+			if (user) {
+				// todo: we should allow one group to listen to many ports!
+				uS::ListenSocket *listenSocket = (uS::ListenSocket *) user;
 
-            if (listenSocket->timer) {
-                listenSocket->timer->stop();
-                listenSocket->timer->close();
-            }
+				if (listenSocket->timer) {
+					listenSocket->timer->stop();
+					listenSocket->timer->close();
+				}
 
-            listenSocket->closeSocket<uS::ListenSocket>();
+				listenSocket->closeSocket<uS::ListenSocket>();
 
-            // mark as stopped listening (extra care?)
-            user = nullptr;
-        }
+				// mark as stopped listening (extra care?)
+				user = nullptr;
+			}
+		}
+		users.clear();
+		users.shrink_to_fit();
     }
 
     if (async) {
